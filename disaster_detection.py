@@ -16,11 +16,11 @@ from sklearn.utils import shuffle
 # =============================================================================
 # Load disasters dataset
 # =============================================================================
-dataset_original =  Disaster.load_dataset('Dataset/Clean_Disasters_T_79187_.csv')
+dataset_original =  Disaster.load_dataset('**path**/Dataset.csv')
 #dataset_original["index"] = 0
 #dataset_original.drop(['Disaster', 'Geo', 'is_duplicate','Unnamed: 0','language'], axis=1,inplace = True)
 dataset =  pre_process.clean_text(dataset_original)
-#dataset = pd.read_csv('Dataset/earth/dataset_clean_nepal.csv',delimiter = ',',nrows=1000 ,converters={'text': str}, encoding = "ISO-8859-1")
+#dataset = pd.read_csv('**path**/dataset_clean_nepal.csv',delimiter = ',',nrows=1000 ,converters={'text': str}, encoding = "ISO-8859-1")
 dataset = shuffle(dataset)
 # =============================================================================
 # Dataset Pre-process for the machine learning models
@@ -34,7 +34,6 @@ dataset = shuffle(dataset)
 # =============================================================================
 
 text = dataset.text
-#label = dataset['choose_one']
 data_concatenated = pd.concat([text],axis=1)
 
 data_concatenated.head()
@@ -47,7 +46,6 @@ for line in tqdm(f):
     values = line.split()
     word = values[0]
     try:
-        #coefs = np.asarray(values[1:], dtype='float32')
         coefs = np.asarray(values[1:], dtype='float64')
         embeddings_index[word] = coefs
     except ValueError:
@@ -113,9 +111,6 @@ features = data_concatenated.values
 models_1 = Disaster.load_ml_models_1()
 models_2 = Disaster.load_ml_models_2()
 
-
-
-
 # =============================================================================
 # Result evaluation
 # =============================================================================
@@ -177,7 +172,7 @@ irrelevant_df.to_csv("300k_irre_df.csv",sep=',',encoding='utf-8')
 # Evaluate time
 # =============================================================================
 #def plot_time_hist():
-#    ufo =pd.read_csv('Dataset/earth/Result_1M_earth_df.csv',delimiter = ',' ,converters={'text': str}, encoding = "utf-8",engine='python' )
+#    ufo =pd.read_csv('**path**/Result_1M_earth_df.csv',delimiter = ',' ,converters={'text': str}, encoding = "utf-8",engine='python' )
 #    ufo.head()
 #    ufo.dtypes
 #    ufo['Date'] = pd.to_datetime(ufo.Date)
@@ -188,16 +183,6 @@ irrelevant_df.to_csv("300k_irre_df.csv",sep=',',encoding='utf-8')
 #plot_time_hist()
 
 
-
-
-
-
-
-
-
-
-
-#
 
 
 
