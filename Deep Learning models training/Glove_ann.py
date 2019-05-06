@@ -1,3 +1,4 @@
+# Import Libraries
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -10,7 +11,6 @@ from nltk import word_tokenize
 from nltk.corpus import stopwords
 from nltk import punkt
 from sklearn.model_selection import train_test_split
-stop_words = stopwords.words('english')
 from keras.utils import to_categorical
 from keras.preprocessing.sequence import pad_sequences
 import re
@@ -21,7 +21,7 @@ warnings.simplefilter(action='ignore', category=FutureWarning)
 warnings.filterwarnings('ignore')
 
 def read_dataset():
-    df = pd.read_csv('Clean_Disasters_T_79187_.csv',delimiter = ',' ,converters={'text': str}, encoding = "ISO-8859-1")
+    df = pd.read_csv('**path**/Dataset.csv',delimiter = ',' ,converters={'text': str}, encoding = "ISO-8859-1")
     return df
 df = read_dataset()
 text = df.text
@@ -29,8 +29,6 @@ label = df['choose_one']
 data_concatenated = pd.concat([text, label],axis=1)
 
 data_concatenated.head()
-
-
 
 embeddings_index = {}
 f = open('glove.twitter.27B.200d.txt', encoding="utf8")
@@ -45,8 +43,6 @@ for line in tqdm(f):
         pass
 f.close()
 print('Found %s word vectors.' % len(embeddings_index))
-
-
 
 
 def sent2vec(s):
@@ -69,10 +65,6 @@ def sent2vec(s):
 print('Checkpoint2 -Normalized Vector for Sentences are created')
 
 data_concatenated.text = data_concatenated.text.apply(sent2vec)
-
-
-#df = pd.DataFrame(index=np.arange(0, data_concatenated.shape[0]), columns=[np.arange(0,50)])
-
 data_concatenated.head()
 
 res = []
@@ -109,9 +101,7 @@ from sklearn.ensemble import RandomForestClassifier
 #xtest_glove = np.array(xtest_glove)
 
 scores = []
-#submission = pd.DataFrame.from_dict({'id': test['id']})
-#for class_name in class_names:
- #   train_target = data_concatenated[class_name]
+#Keras Libraries
 import keras
 from keras.models import Sequential
 from keras.layers import Dense
@@ -130,14 +120,6 @@ def build_ANN(X_train, X_test, y_train, y_test):
     classifier.add(Dropout(p = 0.5))
     classifier.add(Dense(output_dim = 128, init = 'uniform', activation = 'relu'))
     classifier.add(Dropout(p = 0.5))
-#    classifier.add(Dense(output_dim = 256, init = 'uniform', activation = 'relu'))
-#    classifier.add(Dropout(p = 0.5))
-#    classifier.add(Dense(output_dim = 512, init = 'uniform', activation = 'relu'))
-#    classifier.add(Dropout(p = 0.5))
-#    classifier.add(Dense(output_dim = 1024, init = 'uniform', activation = 'relu'))
-#    classifier.add(Dropout(p = 0.5))
-#    classifier.add(Dense(output_dim = 2048, init = 'uniform', activation = 'relu'))
-#    classifier.add(Dropout(p = 0.5))
     
     # Adding the output layer , output_dim = 1 ena node stin exodo
     classifier.add(Dense(output_dim = 1, init = 'uniform', activation = 'sigmoid'))
@@ -148,7 +130,6 @@ def build_ANN(X_train, X_test, y_train, y_test):
     # Fitting the ANN to the Training set
     classifier = classifier.fit(X_train, y_train,validation_data=(X_test,y_test), batch_size = 64, nb_epoch = 120,callbacks=[history])
     
-
     return classifier
 
 def predict(classifier,X_test):
@@ -163,7 +144,7 @@ from keras.models import load_model
 ## Making the Confusion Matrix
 ##cm = confusion_matrix(y_test, y_pred)
 
-#
+#Save model if needed
 #def save_model(save_filepath):
 #    classifier.save(save_filepath)
 
@@ -177,7 +158,7 @@ def neural_print(title):
 #    classifier = load_model(save_filepath)
 #    return classifier
 
-
+# Ann model with cross validation
 def Build_CV_ANN(X_train, X_test, y_train, y_test):
     # Evaluating the ANN
     from keras.wrappers.scikit_learn import KerasClassifier
@@ -200,7 +181,7 @@ def Build_CV_ANN(X_train, X_test, y_train, y_test):
         classifier.add(Dropout(p = 0.1))
         classifier.add(Dense(output_dim = 1024, init = 'uniform', activation = 'relu'))
         classifier.add(Dropout(p = 0.1))
-        #Adding the output layer , output_dim = 1 ena node stin exodo
+        #Adding the output layer 
         classifier.add(Dense(output_dim = 1, init = 'uniform', activation = 'sigmoid'))
         classifier.compile(optimizer = 'adam', loss = 'binary_crossentropy', metrics = ['accuracy'])
     
@@ -237,7 +218,7 @@ def plot_neural(classifier):
 
 #############  MAIN  #################
     
-#save_filepath = '/home/kwstas/Desktop/Thesis_Python/Ml_Learning_models/Ann models saves/Model1/GLOVE/Ann_GLOVE_clf.h5'
+#save_filepath = '**path**/Ann_GLOVE_clf.h5'
 
 #Build the ANN model
 history = build_ANN(X_train, X_test, y_train, y_test)
