@@ -18,7 +18,7 @@ import warnings
 warnings.simplefilter(action='ignore', category=FutureWarning)
 warnings.filterwarnings('ignore')
 
-df = pd.read_csv('socialmedia_disaster_tweets.csv',delimiter = ',' ,converters={'text': str}, encoding = "ISO-8859-1")
+df = pd.read_csv('**path**/Dataset.csv',delimiter = ',' ,converters={'text': str}, encoding = "ISO-8859-1")
 #df = df.loc[df.choose_one!="Can't Decide",:]
 #df.reset_index(drop=True, inplace=True)
 #df['choose_one'].replace(['Relevant','Not Relevant'],[1,0],inplace=True)
@@ -67,7 +67,6 @@ print('Checkpoint2 -Normalized Vector for Sentences are created')
 
 data_concatenated.text = data_concatenated.text.apply(sent2vec)
 
-
 df = pd.DataFrame(index=np.arange(0, data_concatenated.shape[0]), columns=[np.arange(0,50)])
 
 data_concatenated.head()
@@ -82,13 +81,9 @@ for index, row in data_concatenated.iterrows():
 data_concatenated = pd.concat(res, axis=0)
 
 data_concatenated['label'] = lbl
-
 data_concatenated.dropna(axis='columns', inplace = True)
-
 data_concatenated.reset_index(inplace = True)
-
 data_concatenated.head(22)
-
 
 # Split features and Target Variable
 y_df = data_concatenated['label']
