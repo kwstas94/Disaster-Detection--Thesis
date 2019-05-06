@@ -1,15 +1,6 @@
-
-# coding: utf-8
-
-# In[1]:
-
-
-import pandas as pd
+#Import libraries
 from sklearn.model_selection import train_test_split
-import numpy as np
 import sys, os, re, csv, codecs, numpy as np, pandas as pd
- 
-    
 from keras.preprocessing.text import Tokenizer
 from keras.preprocessing.sequence import pad_sequences
 from keras.layers import Dense, Input, LSTM, Embedding, Dropout, Activation
@@ -27,19 +18,15 @@ from keras.layers.embeddings import Embedding
 from keras.layers.normalization import BatchNormalization
 import matplotlib.pyplot as plt
 from keras.callbacks import History,EarlyStopping,ModelCheckpoint
-
+import matplotlib.pyplot as plt
+from sklearn.preprocessing import LabelEncoder, OneHotEncoder
+from sklearn.preprocessing import Imputer
 # Others
 import nltk
 import string
-import numpy as np
-import pandas as pd
-from nltk.corpus import stopwords
-
 from sklearn.manifold import TSNE
-
-
-# In[2]:
-
+import warnings
+warnings.simplefilter(action='ignore', category=FutureWarning)
 
 path = 'data/'
 
@@ -47,29 +34,6 @@ EMBEDDING_FILE=f'glove.6B.300d.txt'
 DATA_FILE=f'{path}Clean_Disasters_T_79187_.csv'
 TRAIN_DATA_FILE=f'{path}train.csv'
 TEST_DATA_FILE=f'{path}Clean_MODEL2__Earth_Hurr_for_27434.csv'
-
-
-# In[14]:
-
-
-import numpy as np
-import matplotlib.pyplot as plt
-import pandas as pd
-import re
-import nltk 
-import sklearn 
-from nltk.corpus import stopwords
-from nltk.stem.porter import PorterStemmer
-#import pattern3
-#from pattern3.en import lemma
-from nltk.stem import WordNetLemmatizer
-from sklearn.preprocessing import LabelEncoder, OneHotEncoder
-from sklearn.preprocessing import Imputer
-
-print('The scikit-learn version is {}.'.format(sklearn.__version__))
-
-import warnings
-warnings.simplefilter(action='ignore', category=FutureWarning)
 
 def read_dataset():
     dataset = pd.read_csv('data/Clean_Disasters_T_79187_.csv',delimiter = ',' ,converters={'text': str}, encoding = "ISO-8859-1")
@@ -119,88 +83,34 @@ def Test_Train_Split(X,y,test_size = 0.3): #Splitting the dataset into the Train
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = test_size, random_state = 42,shuffle=True,stratify=dataset['choose_one'].values)
     return X_train, X_test, y_train, y_test
 
-
+#Executables
 dataset = read_dataset()
 class_hist(dataset)
 missing_values(dataset)
 corpus = make_corpus()
 X,y= Bow_Split(corpus,dataset,max_features=50)
 X_train, X_test, y_train, y_test = Test_Train_Split(X,y,test_size = 0.3)
-
-
-# In[4]:
-
-
 dataset.index
-
-
-# In[ ]:
-
-
-"""
-seq_length = X.shape[1]
-# vocabulary size
-vocab_size = 79187 + 1
-# define model
-model = Sequential()
-model.add(Embedding(vocab_size, 50, input_length=seq_length))
-model.add(LSTM(100, return_sequences=True))
-model.add(LSTM(100))
-model.add(Dense(100, activation='relu'))
-model.add(Dense(vocab_size, activation='softmax'))
-print(model.summary())
-"""
-
-
-# In[ ]:
-
-
-"""
-# define model
-model = Sequential()
-model.add(Embedding(vocab_size, 50, input_length=seq_length))
-model.add(LSTM(100, return_sequences=True))
-model.add(LSTM(100))
-#model.add(Dense(100, activation='relu'))
-model.add(Dense(1, activation='softmax'))
-print(model.summary())
-"""
-
-
-# In[1]:
-
 
 seq_length = X.shape[1]
 # vocabulary size
 vocab_size = 79187 + 1
 maxlen = 50 # max number of words in a comment to use
 inp = Input(shape=(maxlen,))
+# Model
 x = Embedding(vocab_size, 50,kernel_initializer='random_uniform')(inp)
 x = Bidirectional(LSTM(128, return_sequences=True))(x)
-#x = BatchNormalization()(x)
 x = GlobalMaxPool1D()(x)
-
-#x = Dense(64, activation="relu")(x)
-#x = Dropout(0.5)(x)
 x = Dense(1, activation="sigmoid")(x)
 model = Model(inputs=inp, outputs=x)
 model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
 print(model.summary())
-
-
-# In[18]:
-
-
 history = History()
 early_stopping = EarlyStopping(monitor='val_loss', patience=5, mode='min')
 save_best = ModelCheckpoint('model_3.hdf', save_best_only=True, 
                            monitor='val_loss', mode='min')
 history = model.fit(X_train, y_train, batch_size=150, validation_data=(X_test, y_test),
                     epochs=10, verbose=1,callbacks=[early_stopping,save_best,history])
-
-
-# In[19]:
-
 
 # summarize history for accuracy
 plt.plot(history.history['acc'])
