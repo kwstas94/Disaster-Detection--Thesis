@@ -9,7 +9,7 @@ stop_words = stopwords.words('english')
 import re
 from nltk.stem.porter import PorterStemmer
 class pre_process:
-    
+    # https://stackoverflow.com/a/49146722/330558
     def _init_ (self, emoji_pattern):
         emoji_pattern = re.compile("["
                            u"\U0001F600-\U0001F64F"  # emoticons
@@ -26,7 +26,6 @@ class pre_process:
     
     def read_dataset(path):
         dataset = pd.read_csv(path, delimiter = ',' ,converters={'text': str}, encoding = "ISO-8859-1")
-        
         return dataset
     
 
@@ -47,17 +46,7 @@ class pre_process:
     
 
     def clean_text(dataset):
-        emoji_pattern = re.compile("["
-                           u"\U0001F600-\U0001F64F"  # emoticons
-                           u"\U0001F300-\U0001F5FF"  # symbols & pictographs
-                           u"\U0001F680-\U0001F6FF"  # transport & map symbols
-                           u"\U0001F1E0-\U0001F1FF"  # flags (iOS)
-                           u"\U00002702-\U000027B0"
-                           u"\U000024C2-\U0001F251"
-                           u"\U0001f926-\U0001f937"
-                           u"\u200d"
-                           u"\u2640-\u2642" 
-                           "]+", flags=re.UNICODE)
+
         corpus = []
         # Loop over the dataset for cleansing
         for i in range(0 , dataset.shape[0]):
@@ -66,7 +55,7 @@ class pre_process:
             review = re.sub(r"http\S+", "", dataset ['text'][i])
             
             review = emoji_pattern.sub(r'', review)
-            #review = remove_emoji(review)
+            review = remove_emoji(review)
             review = " ".join([a for a in re.split('([A-Z][a-z]+)', review) if a])
             review = re.sub('[^a-zA-Z]' , ' ' , review)
             review = ' '.join(wordninja.split(review) )
