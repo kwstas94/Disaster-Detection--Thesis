@@ -19,7 +19,7 @@ import warnings
 warnings.simplefilter(action='ignore', category=FutureWarning)
 
 def read_dataset():
-    dataset = pd.read_csv('Clean_Disasters_T_79187_.csv',delimiter = ',' ,converters={'text': str}, encoding = "ISO-8859-1")
+    dataset = pd.read_csv('**path**/Dataset.csv',delimiter = ',' ,converters={'text': str}, encoding = "ISO-8859-1")
     return dataset
 
 def class_hist(dataset):
@@ -36,9 +36,9 @@ def missing_values(dataset):
     print('Missing Values')
     display(dataset.isnull().sum())
 
-def make_corpus():    
+def make_corpus(number_twt):    
     corpus = []
-    for i in range(0,79187):
+    for i in range(0,number_twt):
         corpus.append(dataset.text[i])
     return corpus
  
@@ -70,7 +70,7 @@ def Test_Train_Split(X,y,test_size = 0.3): #Splitting the dataset into the Train
 dataset = read_dataset()
 #class_hist(dataset)
 #missing_values(dataset)
-corpus = make_corpus()
+corpus = make_corpus(number_twt)
 X,y= Bow_Split(corpus,dataset,max_features=500)
 X_train, X_test, y_train, y_test = Test_Train_Split(X,y,test_size = 0.3)
 
@@ -396,9 +396,6 @@ def train_predict(learner, X_train, y_train, X_test, y_test):
 #    performance_train_val_viz(grid_search, X_train, y_train, scorer)
     
 
-
-   
-
 from sklearn.metrics import make_scorer, fbeta_score
 from sklearn import model_selection
 from sklearn.ensemble import BaggingClassifier, GradientBoostingClassifier, AdaBoostClassifier
@@ -409,9 +406,6 @@ for k, v in clfs.items():
     trained_cl = train_predict(k, X_train, y_train, X_test, y_test)
 
 #performance(viz_results_train,viz_results_test)
-
-
-
 #scorer ='accuracy'
 
 
