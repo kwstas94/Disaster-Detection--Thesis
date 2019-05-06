@@ -35,9 +35,6 @@ def Bow_Split(corpus,dataset,max_features): #### 2-Bag of words model
     cv = CountVectorizer(max_features = (max_features))
     X = cv.fit_transform(corpus).toarray() 
     
-    ####Tf-Idf Vectorizer
-    #tf = TfidfVectorizer(max_features=(50))
-    #X = tf.fit_transform(corpus).toarray()
     
     #Split Dataset to X and y
     y = dataset.loc[: ,'choose_one'].values
@@ -74,6 +71,8 @@ def build_ANN(X_train, X_test, y_train, y_test):
     classifier.add(Dropout(p = 0.5))
     classifier.add(Dense(output_dim = 128, init = 'uniform', activation = 'relu'))
     classifier.add(Dropout(p = 0.5))
+    #Add more layers if needed
+    
     #classifier.add(Dense(output_dim = 256, init = 'uniform', activation = 'relu'))
     #classifier.add(Dropout(p = 0.5))
     #classifier.add(Dense(output_dim = 512, init = 'uniform', activation = 'relu'))
@@ -121,7 +120,7 @@ def load_my_model(save_filepath):
     classifier = load_model(save_filepath)
     return classifier
 
-
+##ANN with cross validation
 def Build_CV_ANN(X_train, X_test, y_train, y_test):
     # Evaluating the ANN
     from keras.wrappers.scikit_learn import KerasClassifier
@@ -183,7 +182,7 @@ def make_curve(history):
 
 
 ######MAIN#########
-save_filepath = '/home/kwstas/Desktop/Thesis_Python/ALL_models/Models/Ann models saves/Model1/BOW/Ann_BOW_clf.h5'
+save_filepath = '**path**/Ann_BOW_clf.h5'
 #REad dataset
 dataset = read_dataset()
 
@@ -195,7 +194,6 @@ X,y= Bow_Split(corpus,dataset,max_features=500)
 X_train, X_test, y_train, y_test = Test_Train_Split(X,y,test_size = 0.3)
 
 
-
 #Build the ANN model
 history = build_ANN(X_train, X_test, y_train, y_test)
 
@@ -205,15 +203,11 @@ history = build_ANN(X_train, X_test, y_train, y_test)
 #Load a compiled model
 classifier = load_my_model(save_filepath)
 
-
-
 #y_pred = predict(classifier,X_test)
 #print(accuracy_score(y_test, y_pred))
-
-
 
 #MAke plots
 make_curve(history)
 
-#Save Keras Model
+### Save Keras Model
 #save_model(save_filepath)
