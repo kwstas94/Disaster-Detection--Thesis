@@ -1,5 +1,3 @@
-
-
 import pickle
 from tqdm import tqdm
 # Pandas, sklern, numpy, matplotlib, other
@@ -68,6 +66,7 @@ class Disaster:
         models.append(joblib.load('model_1/AdaBoostclassifier.joblib.pkl'))
         models.append(joblib.load('model_1/BgCclassifier.joblib.pkl'))
         models.append(joblib.load('model_1/NBclassifier.joblib.pkl'))
+        models.append(joblib.load('model_1/LSTM.best.hdf5'))
         
         return models
     
@@ -77,6 +76,7 @@ class Disaster:
         models.append(joblib.load('model_2/BgCclassifier.joblib.pkl'))
         models.append(joblib.load('model_2/NBclassifier.joblib.pkl'))
         models.append(joblib.load('model_2/LRclassifier.joblib.pkl'))
+        models.append(joblib.load('model_2/LSTM.best.hdf5'))
         return models
 
     
