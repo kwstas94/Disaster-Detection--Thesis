@@ -20,7 +20,6 @@ dataset_original =  Disaster.load_dataset('**path**/Dataset.csv')
 #dataset_original["index"] = 0
 #dataset_original.drop(['Disaster', 'Geo', 'is_duplicate','Unnamed: 0','language'], axis=1,inplace = True)
 dataset =  pre_process.clean_text(dataset_original)
-#dataset = pd.read_csv('**path**/dataset_clean_nepal.csv',delimiter = ',',nrows=1000 ,converters={'text': str}, encoding = "ISO-8859-1")
 dataset = shuffle(dataset)
 # =============================================================================
 # Dataset Pre-process for the machine learning models
